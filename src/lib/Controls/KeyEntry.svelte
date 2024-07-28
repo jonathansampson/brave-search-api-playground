@@ -69,7 +69,22 @@
                 <div class="mt-2">
                     {#each Endpoints as endpoint }
                         {#if associatedEndpoints.includes(endpoint.value)}
-                            <span class="badge bg-primary me-1">{ endpoint.label }</span>
+                            <span class="badge border border-light-subtle text-secondary me-1">
+                                {#if endpoint.value === 'web'}
+                                    <i class="bi bi-search"></i>
+                                {:else if endpoint.value === 'image'}
+                                    <i class="bi bi-image"></i>
+                                {:else if endpoint.value === 'video'}
+                                    <i class="bi bi-play-btn"></i>
+                                {:else if endpoint.value === 'news'}
+                                    <i class="bi bi-newspaper"></i>
+                                {:else if endpoint.value === 'suggest'}
+                                    <i class="bi bi-chat-right-text"></i>
+                                {:else if endpoint.value === 'spellcheck'}
+                                    <i class="bi bi-spellcheck"></i>
+                                {/if}
+                                { endpoint.label }
+                            </span>
                         {/if}
                     {/each}
                 </div>
