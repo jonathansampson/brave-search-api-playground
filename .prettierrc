@@ -1,0 +1,12 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": true,
+  "printWidth": 120,
+  "svelteStrictMode": true,
+  "quoteProps": "consistent",
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "arrowParens": "always",
+  "plugins": ["prettier-plugin-svelte"]
+}
