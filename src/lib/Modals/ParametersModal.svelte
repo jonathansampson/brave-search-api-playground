@@ -5,6 +5,7 @@
   import NewsConfig from '../Configs/NewsConfig.svelte';
   import SuggestConfig from '../Configs/SuggestConfig.svelte';
   import SpellcheckConfig from '../Configs/SpellcheckConfig.svelte';
+  import type { ComponentType, SvelteComponent } from 'svelte';
   import type { EndpointType } from '../Globals';
 
   const components = {
@@ -14,9 +15,9 @@
     News: NewsConfig,
     Suggest: SuggestConfig,
     Spellcheck: SpellcheckConfig,
-  } as Record<string, any>;
+  } as Record<string, ComponentType>;
 
-  let componentInstance: any;
+  let componentInstance: SvelteComponent | null = null;
   let activeComponent = components.Web;
 
   function setActiveComponent (event: Event) {
@@ -30,13 +31,19 @@
 
   export function getComponentName (): EndpointType | null {
     if (componentInstance) {
-      return componentInstance.name.toLowerCase();
+      return componentInstance.name.toLowerCase() as EndpointType;
     }
     return null;
   }
 
-  export function getParameters (): any {
-    if (componentInstance) {
+  export function getParameters (): Record<string, unknown> {
+    /**
+     * This is a somewhat messy hack to avoid type confusion
+     * during development. Not quite sure how to declare that
+     * the component has an exposed `getParameters` function.
+     */
+    const getParams = componentInstance?.getParameters;
+    if (componentInstance && typeof getParams === 'function') {
       return componentInstance.getParameters();
     }
     throw new Error('No active component');
