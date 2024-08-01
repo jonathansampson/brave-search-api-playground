@@ -1,42 +1,17 @@
-<script lang="ts">
-  import WebConfig from '../Configs/WebConfig.svelte';
-  import ImageConfig from '../Configs/ImageConfig.svelte';
-  import VideoConfig from '../Configs/VideoConfig.svelte';
-  import NewsConfig from '../Configs/NewsConfig.svelte';
-  import SuggestConfig from '../Configs/SuggestConfig.svelte';
-  import SpellcheckConfig from '../Configs/SpellcheckConfig.svelte';
+<script lang="ts" context="module">
   import type { ComponentType, SvelteComponent } from 'svelte';
   import type { EndpointType } from '../Globals';
 
-  const components = {
-    Web: WebConfig,
-    Image: ImageConfig,
-    Video: VideoConfig,
-    News: NewsConfig,
-    Suggest: SuggestConfig,
-    Spellcheck: SpellcheckConfig,
-  } as Record<string, ComponentType>;
-
   let componentInstance: SvelteComponent | null = null;
-  let activeComponent = components.Web;
 
-  function setActiveComponent (event: Event) {
-    const target = event.target as HTMLSelectElement;
-    if (target.value in components) {
-      activeComponent = components[target.value];
-      return;
-    }
-    throw new Error('Invalid component');
-  }
-
-  export function getComponentName (): EndpointType | null {
+  export function getActiveEndpointType (): EndpointType | null {
     if (componentInstance) {
       return componentInstance.name.toLowerCase() as EndpointType;
     }
     return null;
   }
 
-  export function getParameters (): Record<string, unknown> {
+  export function getActiveParameters (): Record<string, string | number> {
     /**
      * This is a somewhat messy hack to avoid type confusion
      * during development. Not quite sure how to declare that
@@ -47,6 +22,35 @@
       return componentInstance.getParameters();
     }
     throw new Error('No active component');
+  }
+</script>
+
+<script lang="ts">
+  import WebConfig from '../Configs/WebConfig.svelte';
+  import ImageConfig from '../Configs/ImageConfig.svelte';
+  import VideoConfig from '../Configs/VideoConfig.svelte';
+  import NewsConfig from '../Configs/NewsConfig.svelte';
+  import SuggestConfig from '../Configs/SuggestConfig.svelte';
+  import SpellcheckConfig from '../Configs/SpellcheckConfig.svelte';
+
+  const components = {
+    Web: WebConfig,
+    Image: ImageConfig,
+    Video: VideoConfig,
+    News: NewsConfig,
+    Suggest: SuggestConfig,
+    Spellcheck: SpellcheckConfig,
+  } as Record<string, ComponentType>;
+
+  let activeComponent = components.Web;
+
+  function setActiveComponent (event: Event) {
+    const target = event.target as HTMLSelectElement;
+    if (target.value in components) {
+      activeComponent = components[target.value];
+      return;
+    }
+    throw new Error('Invalid component');
   }
 </script>
 

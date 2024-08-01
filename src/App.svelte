@@ -1,39 +1,49 @@
 <script lang="ts">
   import AccessModal from './lib/Modals/AccessModal.svelte';
-  import ParametersModal from './lib/Modals/ParametersModal.svelte';
+  import { updateAccessKey, getAccessKeysForEndpoint } from './lib/Stores/AccessKeysStore';
+  import ParametersModal, { getActiveEndpointType, getActiveParameters } from './lib/Modals/ParametersModal.svelte';
+  import ToastManager, { AddToast } from './lib/Controls/TostManager.svelte';
   import { JsonView } from '@zerodevx/svelte-json-view';
 
   import type { APIKey } from './lib/Globals';
-  import type AccessModalType from './lib/Modals/AccessModal.svelte';
-  import type ParametersModalType from './lib/Modals/ParametersModal.svelte';
 
   let query = '';
   let makingRequest = false;
   let apiResponse: Response | null = null;
-  let accessModal: InstanceType<typeof AccessModalType> | null = null;
-  let parametersModal: InstanceType<typeof ParametersModalType> | null = null;
 
   async function issueRequest () {
     console.log('Making request');
 
-    if (!parametersModal || !accessModal) {
-      console.log(parametersModal, accessModal);
+    if (query.trim() === '') {
+      AddToast({
+        id: Date.now(),
+        title: 'No Query',
+        message: 'Please enter a query',
+        type: 'error',
+      });
       return;
     }
 
-    const endpoint = parametersModal.getComponentName();
+    const endpoint = getActiveEndpointType();
 
     if (!endpoint) {
       return;
     }
 
-    const apiKey = accessModal.getKeyForEndpoint(endpoint);
+    const apiKeys = getAccessKeysForEndpoint(endpoint);
 
-    if (!apiKey) {
+    if (apiKeys.length === 0) {
+      AddToast({
+        id: Date.now(),
+        title: 'No API Key',
+        message: 'Please add an API key for this endpoint',
+        type: 'error',
+      });
       return;
     }
 
-    const parameters = parametersModal.getParameters();
+    const apiKey = apiKeys[0];
+    const parameters = getActiveParameters();
     const payload = { query, type: endpoint, parameters, key: apiKey.key };
 
     makingRequest = true;
@@ -50,20 +60,19 @@
 
   async function onResponse (key: APIKey, response: Response) {
     const data = await response.json();
-    console.log(data);
     if (data.response.type !== 'ErrorResponse') {
+      const lastUsed = Date.now();
       const monthLimit = data.ratelimits['x-ratelimit-limit'].split(',')[1].trim();
       const monthRemaining = data.ratelimits['x-ratelimit-remaining'].split(',')[1].trim();
       const monthReset = data.ratelimits['x-ratelimit-reset'].split(',')[1].trim();
-      key.lastUsed = Date.now();
-      key.monthLimit = monthLimit;
-      key.monthRemaining = monthRemaining;
-      key.monthReset = monthReset;
-      accessModal?.updateKey(key);
+      const newKeyDetails = { lastUsed, monthLimit, monthRemaining, monthReset };
+      updateAccessKey(key.id, Object.assign(key, newKeyDetails));
     }
     return data.response;
   }
 </script>
+
+<ToastManager />
 
 <div class="container-fluid d-flex flex-column vh-100">
   <div class="row flex-shrink-0 g-2 my-2">
@@ -71,7 +80,7 @@
     <div class="col-12 col-sm-5">
       <input type="text" class="form-control" placeholder="Query" bind:value="{query}" />
     </div>
-    <ParametersModal bind:this="{parametersModal}" />
+    <ParametersModal />
     <!-- Send button -->
     <div class="col-12 col-sm-2">
       <button type="button" class="btn btn-primary w-100" disabled="{makingRequest}" on:click="{issueRequest}">
@@ -93,7 +102,7 @@
 
   <div class="row flex-shrink-0 my-2">
     <div class="col-12">
-      <AccessModal bind:this="{accessModal}" />
+      <AccessModal />
     </div>
   </div>
 </div>
