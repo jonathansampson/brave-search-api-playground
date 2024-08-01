@@ -89,6 +89,17 @@ const svelteConfigsArray = [
       'prettier': prettierPlugin,
       '@stylistic': stylistic,
     },
+    rules: {
+      'svelte/html-quotes': [
+        'error',
+        {
+          prefer: 'double',
+          dynamic: {
+            quoted: true,
+          },
+        },
+      ],
+    },
   },
 ];
 
