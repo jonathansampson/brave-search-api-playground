@@ -8,7 +8,7 @@ function getRateLimits (headers) {
   return rateLimits;
 }
 
-export default class BraveAPI {
+module.exports = class BraveAPI {
   version = 'v1';
   base = 'https://api.search.brave.com/res';
   headers = new Headers({
@@ -102,4 +102,4 @@ export default class BraveAPI {
       };
     });
   }
-}
+};

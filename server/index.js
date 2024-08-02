@@ -1,12 +1,8 @@
-import BraveAPI from './API.js';
-import express from 'express';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
+const BraveAPI = require('./API.js');
+const express = require('express');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 
@@ -17,13 +13,6 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
-});
-
-app.use(basePath, express.static('../dist'));
-
-app.get(basePath + '/', (req, res) => {
-  const index = path.resolve(__dirname, '../', 'dist/index.html');
-  res.sendFile(index);
 });
 
 app.post(basePath + '/search', async (req, res) => {
