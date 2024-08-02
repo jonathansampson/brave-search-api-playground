@@ -33,7 +33,7 @@
 
   function save_key () {
     if (key !== null && name !== null) {
-      const saved = dispatch('save', { id, key, name, associatedEndpoints }, { cancelable: true });
+      const saved = dispatch('save', { id, key, name, monthLimit, monthRemaining, monthReset, associatedEndpoints }, { cancelable: true });
       if (saved) {
         mode = 'view';
       }
