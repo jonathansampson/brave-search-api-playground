@@ -1,5 +1,9 @@
 # Brave Search API Playground
 
+Deployed to <https://sampson.codes/brave-search-playground/>.
+
+## Development
+
 _A work in progress_.
 
 Run the server: `node server/index.js`. With the server running, run `npm run dev` to spin-up the front-end.
