@@ -7,6 +7,7 @@ import KeyEntry from '../Controls/KeyEntry.svelte';
 
   let isLoadingKeys = false;
   let hasAcceptedRisk = localStorage.getItem('hasAcceptedRisk') === 'true';
+  let hasDismissedKeyOffer = localStorage.getItem('hasDismissedKeyOffer') === 'true';
 
   function makeDemoKey (): void {
     addAccessKey(generateKeyTemplate({ name: 'Demo Key' }));
@@ -15,6 +16,11 @@ import KeyEntry from '../Controls/KeyEntry.svelte';
   function onAcceptRisk (): void {
     localStorage.setItem('hasAcceptedRisk', 'true');
     hasAcceptedRisk = true;
+  }
+
+  function onDismissKeyOffer (): void {
+    localStorage.setItem('hasDismissedKeyOffer', 'true');
+    hasDismissedKeyOffer = true;
   }
 
   function onKeyDeleted (event: CustomEvent): void {
@@ -57,6 +63,14 @@ import KeyEntry from '../Controls/KeyEntry.svelte';
       </div>
       {#if hasAcceptedRisk}
       <div class="modal-body">
+        {#if !hasDismissedKeyOffer}
+        <div class="d-flex mb-2">
+          <p class="flex-grow-1 border rounded m-0 p-2 text-center me-2">
+            Visit <a href="https://api.search.brave.com/" target="_blank">api.search.brave.com</a> for a <strong>free API key</strong>.
+          </p>
+          <input type="button" class="btn btn-primary" value="Dismiss" on:click="{onDismissKeyOffer}">
+        </div>
+        {/if}
         <div class="list-group">
             {#each $keysStore as key}
               <KeyEntry {...key} on:delete="{onKeyDeleted}" on:save="{onKeySaved}" />
