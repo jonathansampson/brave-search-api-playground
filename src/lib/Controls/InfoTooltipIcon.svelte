@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
 
   export let filled = false;
+  export let icon = 'info-circle';
   export let content = '';
 
   onMount(() => {
@@ -14,7 +15,7 @@
 </script>
 
 <i
-  class="bi bi-info-circle{filled ? '-fill' : ''}"
+  class="bi bi-{ icon }{ filled ? '-fill' : '' }"
   data-bs-toggle="tooltip"
   data-bs-placement="top"
   data-bs-title="{content}"></i>

@@ -1,34 +1,20 @@
 <script lang="ts">
 
-  import type { APIKey } from '../Globals';
-  import KeyEntry from '../Controls/KeyEntry.svelte';
+  import InfoTooltipIcon from '../Controls/InfoTooltipIcon.svelte';
+import KeyEntry from '../Controls/KeyEntry.svelte';
   import { keysStore, addAccessKey, removeAccessKey, updateAccessKey } from '../Stores/AccessKeysStore';
+    import { generateKeyTemplate } from '../utilities';
 
   let isLoadingKeys = false;
-
-  function generateKeyTemplate (details: { name: string }): APIKey {
-    function guid () {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        var r = (Math.random() * 16) | 0,
-          v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    }
-
-    return {
-      id: guid(),
-      key: '',
-      name: details.name ?? '',
-      monthLimit: 0,
-      monthRemaining: 0,
-      monthReset: 0,
-      lastUsed: 0,
-      associatedEndpoints: [],
-    };
-  }
+  let hasAcceptedRisk = localStorage.getItem('hasAcceptedRisk') === 'true';
 
   function makeDemoKey (): void {
     addAccessKey(generateKeyTemplate({ name: 'Demo Key' }));
+  }
+
+  function onAcceptRisk (): void {
+    localStorage.setItem('hasAcceptedRisk', 'true');
+    hasAcceptedRisk = true;
   }
 
   function onKeyDeleted (event: CustomEvent): void {
@@ -61,9 +47,15 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">API Keys</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          API Keys
+          {#if hasAcceptedRisk}
+            <InfoTooltipIcon icon="exclamation-triangle" content="This playground sends your API key to our servers. For security, use temporary keys here and create separate keys for your production applications." />
+          {/if}
+        </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      {#if hasAcceptedRisk}
       <div class="modal-body">
         <div class="list-group">
             {#each $keysStore as key}
@@ -77,6 +69,17 @@
         </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
+      {:else}
+      <div class="modal-body">
+        <div class="card mb-4 text-bg-warning">
+          <h5 class="card-header"><i class="bi bi-exclamation-triangle-fill"></i> Caution:</h5>
+          <div class="card-body d-flex flex-column">
+            <p class="card-text">This playground sends your API key to our servers. For security, use temporary keys here and create separate keys for your production applications.</p>
+            <input type="button" class="btn btn-primary" value="Accept and Continue" on:click="{onAcceptRisk}" />
+          </div>
+        </div>
+      </div>
+      {/if}
     </div>
   </div>
 </div>
