@@ -1,3 +1,23 @@
+export interface ToastDetail {
+  id: number
+  title: string
+  message: string
+  type: 'info' | 'warning' | 'error' | 'success'
+}
+
+export interface RateLimitsObject {
+  'x-ratelimit-limit': string
+  'x-ratelimit-remaining': string
+  'x-ratelimit-reset': string
+  'x-ratelimit-policy': string
+}
+
+export interface APIResponse {
+  key: string
+  ratelimits: RateLimitsObject
+  response: { type: string }
+}
+
 export const Endpoints = [
   { value: 'web', label: 'Web' },
   { value: 'image', label: 'Image' },
