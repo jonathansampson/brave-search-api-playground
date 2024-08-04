@@ -1,5 +1,6 @@
 export default {
   preferredServicePort: 3000,
+  developmentServicePort: 3000,
   publicServePath: '/brave-search-playground/search',
   api: {
     version: 'v1',

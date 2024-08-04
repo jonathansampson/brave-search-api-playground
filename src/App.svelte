@@ -1,4 +1,5 @@
 <script lang="ts">
+  import APIServiceConfigs from '../server/src/configs';
   import AccessModal from './lib/Modals/AccessModal.svelte';
   import { updateAccessKey, getAccessKeysForEndpoint } from './lib/Stores/AccessKeysStore';
   import ParametersModal, { getActiveEndpointType, getActiveParameters } from './lib/Modals/ParametersModal.svelte';
@@ -63,9 +64,12 @@
     const headers = { 'Content-Type': 'application/json' };
     const url = new URL('/brave-search-playground/search', location.href);
 
-    // If we're in development mode, we need to set the port to 3000.
-    if (location.port) {
-      url.port = '3000';
+    /**
+     * During development, the API server runs on port 3000.
+     * Configure this value within ./server/src/configs.ts.
+    */
+    if (location.hostname === 'localhost') {
+      url.port = APIServiceConfigs.developmentServicePort.toString();
     }
 
     try {
