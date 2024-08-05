@@ -5,7 +5,6 @@
   import ParametersModal, { getActiveEndpointType, getActiveParameters } from './lib/Modals/ParametersModal.svelte';
   import ToastManager, { AddToast } from './lib/Controls/ToastManager.svelte';
   import { JsonView } from '@zerodevx/svelte-json-view';
-
   import type { APIKey, EndpointType } from './lib/Globals';
   import { parseRateLimits } from './lib/utilities';
 
@@ -101,6 +100,12 @@
 <ToastManager />
 
 <div class="container-fluid d-flex flex-column vh-100">
+  <div class="row flex-shrink-0 my-2">
+    <div class="col-12 text-center">
+      <h1>Brave Search API Playground</h1>
+      <p>An experiment lovingly crafted by <i class="bi bi-twitter-x"></i> <a href="https://x.com/bravesampson" title="Visit Profile of Brave Sampson on X">BraveSampson</a>. If anything is broken, let him know :)</p>
+    </div>
+  </div>
   <div class="row flex-shrink-0 g-2 my-2">
     <!-- Query -->
     <div class="col-12 col-sm-5">
@@ -118,7 +123,8 @@
     </div>
   </div>
 
-  <div class="row flex-grow-1 mx-1 overflow-auto">
+  <!-- <div class="row flex-grow-1 mx-1 overflow-auto"> -->
+  <div class="row { apiResponse ? 'flex-grow-1' : 'flex-shrink-0' } mx-1 overflow-auto">
     <div id="results">
       {#if apiResponse}
         <JsonView json="{apiResponse}" depth="{1}" />

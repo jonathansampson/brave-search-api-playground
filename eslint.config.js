@@ -90,6 +90,8 @@ const svelteConfigsArray = [
       '@stylistic': stylistic,
     },
     rules: {
+      'svelte/indent': 'error',
+      'indent': 'off',
       'svelte/html-quotes': [
         'error',
         {
