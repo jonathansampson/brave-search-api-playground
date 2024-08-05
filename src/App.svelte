@@ -103,7 +103,7 @@
   <div class="row flex-shrink-0 my-2">
     <div class="col-12 text-center">
       <h1>Brave Search API Playground</h1>
-      <p>An experiment lovingly crafted by <i class="bi bi-twitter-x"></i> <a href="https://x.com/bravesampson" title="Visit Profile of Brave Sampson on X">BraveSampson</a>. If anything is broken, let him know :)</p>
+      <p>An experiment lovingly crafted by <i class="bi bi-twitter-x"></i> <a href="https://x.com/bravesampson" title="Visit Profile of Brave Sampson on X">BraveSampson</a>. <a href="https://github.com/jonathansampson/brave-search-api-playground">Source</a> on <i class="bi bi-github"></i> GitHub.</p>
     </div>
   </div>
   <div class="row flex-shrink-0 g-2 my-2">
