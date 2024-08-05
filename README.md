@@ -2,11 +2,15 @@
 
 Deployed to <https://sampson.codes/brave-search-playground/>.
 
-## Development
+## Starting the Server
 
-_A work in progress_.
+Open a terminal and navigate to the `/server/` directory. From there, run `npm run start`. This will build the project and run the _start_ script. The `configs.ts` file contains values that specify preferred ports, service path, and API parameters and settings.
 
-Run the server: `node server/index.js`. With the server running, run `npm run dev` to spin-up the front-end.
+## Starting the Front-end
+
+Open a terminal to the project directory and run `npm run dev`. This will launch a development instance of the project at <localhost:5173/brave-search-playground>.
+
+## Preview
 
 You'll need an API key to enjoy the playground: get a free key at https://api.search.brave.com.
 
