@@ -49,8 +49,6 @@
   }
 
   async function issueRequest () {
-    console.log('Making request');
-
     if (!validateQuery() || !validateEndpoint() || !validateApiKey()) {
       return;
     }
@@ -70,6 +68,11 @@
     if (location.hostname === 'localhost') {
       url.port = APIServiceConfigs.developmentServicePort.toString();
     }
+
+    /**
+     * Output the Debug Information
+    */
+    console.log('Parameters:', parameters);
 
     try {
       const response = await fetch(url, { method, body, headers });

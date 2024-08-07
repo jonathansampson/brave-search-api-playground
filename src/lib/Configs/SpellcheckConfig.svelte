@@ -7,19 +7,10 @@
 
   export const name = 'Spellcheck';
   export function getParameters () {
-    let params = {};
-
-    // Required Parameters (None, as of 2024-07)
-    // params = { ...params, ...{} };
-
-    // Optional Parameters
-    params = {
-      ...params,
+    return {
       country: country.toLowerCase(),
       lang: lang.toLowerCase(),
     };
-
-    return params;
   }
 </script>
 

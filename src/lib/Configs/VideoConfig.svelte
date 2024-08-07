@@ -17,24 +17,17 @@
 
   export const name = 'Video';
   export function getParameters () {
-    let params = {};
-
-    // Required Parameters (None, as of 2024-07)
-    // params = { ...params, ...{} };
-
-    // Optional Parameters
-    params = {
-      ...params,
+    return {
       country: country.toLowerCase(),
       search_lang,
       count,
       offset,
       safesearch,
-      freshness,
-      spellcheck: checkboxes[0].checked,
+      // Convert selected_booleans to object
+      ...checkboxes.reduce((acc, { id, checked }) => ({ ...acc, [id]: checked }), {}),
+      // Conditional parameters
+      ...freshness && { freshness },
     };
-
-    return params;
   }
 </script>
 

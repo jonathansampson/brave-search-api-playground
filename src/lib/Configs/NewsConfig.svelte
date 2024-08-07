@@ -14,31 +14,21 @@
   let count = 20;
   let offset = 0;
   let safesearch = 'strict';
-  let spellcheck = checkboxes[0];
   let freshness = '';
-  let extra_snippets = checkboxes[1];
 
   export const name = 'News';
   export function getParameters () {
-    let params = {};
-
-    // Required Parameters (None, as of 2024-07)
-    // params = { ...params, ...{} };
-
-    // Optional Parameters
-    params = {
-      ...params,
+    return {
       country: country.toLowerCase(),
       search_lang,
       count,
       offset,
       safesearch,
-      freshness,
-      spellcheck: spellcheck.checked,
-      extra_snippets: extra_snippets.checked,
+      // Convert selected_booleans to object
+      ...checkboxes.reduce((acc, { id, checked }) => ({ ...acc, [id]: checked }), {}),
+      // Conditional parameters
+      ...freshness && { freshness },
     };
-
-    return params;
   }
 </script>
 

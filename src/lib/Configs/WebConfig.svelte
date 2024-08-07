@@ -20,6 +20,9 @@
     { id: 'web', label: 'Web', checked: false },
   ];
 
+  // Track which filters are selected
+  let selected_filters: string[] = result_filters.filter(({ checked }) => checked).map(({ id }) => id);
+
   let country = 'US';
   let search_lang = 'en';
   let safesearch = 'moderate';
@@ -31,50 +34,28 @@
 
   export const name = 'Web';
   export function getParameters () {
-    let params = {};
-
-    // Required Parameters
-    // There are no required parameters to add for this endpoint
-    params = { ...params, ...{} };
-
-    // Optional Parameters
-    params = {
-      ...params,
+    return {
       country: country.toLowerCase(),
       search_lang,
       count,
       offset,
       safesearch,
-      text_decorations: checkboxes[0].checked,
-      spellcheck: checkboxes[1].checked,
-      result_filter: result_filters
-        .filter(f => f.checked)
-        .map(f => f.id)
-        .join(','),
-      extra_snippets: checkboxes[2].checked,
-      summary: checkboxes[3].checked,
+      // Conditionally add result filters
+      ...selected_filters.length > 0 && { result_filter: selected_filters.join(',') },
+      // Convert selected_booleans to object
+      ...checkboxes.reduce((acc, { id, checked }) => ({ ...acc, [id]: checked }), {}),
+      // Conditionally add freshness, units, and goggles_id
+      ...freshness && { freshness },
+      ...units && { units },
+      ...goggles_id && { goggles_id },
     };
-
-    if (freshness !== '') {
-      params = { ...params, freshness };
-    }
-
-    if (units !== '') {
-      params = { ...params, units };
-    }
-
-    if (goggles_id !== '') {
-      params = { ...params, goggles_id };
-    }
-
-    return params;
   }
 </script>
 
 <div class="mb-3 row">
   <div class="btn-group" role="group">
     {#each checkboxes as { id, label, checked }}
-      <input type="checkbox" class="btn-check" bind:checked {id} autocomplete="off" />
+      <input type="checkbox" class="btn-check" value="{id}" bind:checked {id} />
       <label class="btn btn-outline-primary" for="{id}">{label}</label>
     {/each}
   </div>
@@ -174,20 +155,10 @@
 </p>
 
 <div class="mb-3 row">
-  <div class="col-6">
-    <!-- Display the first half of the result_filters -->
-    {#each result_filters.slice(0, Math.ceil(result_filters.length / 2)) as { id, label, checked }}
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" {id} bind:checked />
-        <label class="form-check-label" for="{id}">{label}</label>
-      </div>
-    {/each}
-  </div>
-  <div class="col-6">
-    <!-- Display the last half of the result_filters -->
-    {#each result_filters.slice(Math.ceil(result_filters.length / 2)) as { id, label, checked }}
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" {id} bind:checked />
+  <div class="col-12 d-flex flex-wrap">
+    {#each result_filters as { id, label, checked }}
+      <div class="form-check form-switch w-50">
+        <input class="form-check-input" type="checkbox" bind:group="{selected_filters}" value="{id}" role="switch" {id} bind:checked />
         <label class="form-check-label" for="{id}">{label}</label>
       </div>
     {/each}

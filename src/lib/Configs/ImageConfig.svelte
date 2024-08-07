@@ -14,22 +14,14 @@
 
   export const name = 'Image';
   export function getParameters () {
-    let params = {};
-
-    // Required Parameters (None, as of 2024-07)
-    // params = { ...params, ...{} };
-
-    // Optional Parameters
-    params = {
-      ...params,
+    return {
       country: country.toLowerCase(),
       search_lang,
       count,
       safesearch,
-      spellcheck: checkboxes[0].checked,
+      // Convert selected_booleans to object
+      ...checkboxes.reduce((acc, { id, checked }) => ({ ...acc, [id]: checked }), {}),
     };
-
-    return params;
   }
 </script>
 

@@ -10,25 +10,16 @@
   let country = 'US';
   let lang = 'en';
   let count = 5;
-  let rich = checkboxes[0];
 
   export const name = 'Suggest';
   export function getParameters () {
-    let params = {};
-
-    // Required Parameters (None, as of 2024-07)
-    // params = { ...params, ...{} };
-
-    // Optional parameters
-    params = {
-      ...params,
+    return {
       country: country.toLowerCase(),
       lang: lang.toLowerCase(),
       count,
-      rich: rich.checked,
+      // Convert selected_booleans to object
+      ...checkboxes.reduce((acc, { id, checked }) => ({ ...acc, [id]: checked }), {}),
     };
-
-    return params;
   }
 </script>
 
